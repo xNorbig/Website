@@ -11,6 +11,7 @@ function updateCostByCoordinates() {
 	let ids = document.querySelectorAll(config.list);
 	let values = [];
 	ids.forEach((id) => {
+		id.value = Math.floor(parseInt(id.value));
 		if (!parseInt(id.value)) { id.value = "0" }
 		if (parseInt(id.value) > parseInt(id.max)) { id.value = id.max; }
 		if (parseInt(id.value) < parseInt(id.min)) { id.value = id.min }
@@ -38,7 +39,6 @@ function updateCostBySize() {
 }
 
 function updateCost(data) {
-	console.log(data)
 	const minX = Math.min(data["x1"], data["x2"]); document.getElementById("minX").innerHTML = minX;
 	const maxX = Math.max(data["x1"], data["x2"]); document.getElementById("maxX").innerHTML = maxX;
 	const minY = Math.min(data["y1"], data["y2"]); document.getElementById("minY").innerHTML = minY;
@@ -48,7 +48,9 @@ function updateCost(data) {
 	const sizeX = maxX - minX + 1; document.getElementById("sizeX").innerHTML = sizeX;
 	const sizeY = maxY - minY + 1; document.getElementById("sizeY").innerHTML = sizeY;
 	const sizeZ = maxZ - minZ + 1; document.getElementById("sizeZ").innerHTML = sizeZ;
-	
+
+	document.getElementById("alert").className = (sizeX < 5 || sizeY < 5 || sizeZ < 5) ? "alert alert-danger" : "d-none"
+
 	let heightRate = (maxY > config.surfaceLevel) ? 1 + (config.surfaceLevel - minY) * config.height : sizeY * config.height;
 	let useX = Math.min(Math.abs(minX), Math.abs(maxX)) > Math.min(Math.abs(minZ), Math.abs(maxZ));
 	let otherSize = (useX) ? sizeZ : sizeX;
@@ -58,7 +60,6 @@ function updateCost(data) {
 	let taxes = [];
 	for (let i = loopMin; i <= loopMax; i++) {
 		let centerRate = (i == 0) ? 1 : 1.0 - (Math.log(Math.abs(i) / 1000) / Math.log(config.centerLogBase));
-		console.log(i, centerRate)
 		let taxRate = config.rate;
 		let blockRate = heightRate * centerRate * taxRate;
 		taxes.push(blockRate * otherSize);
