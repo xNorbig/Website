@@ -8,27 +8,37 @@ const config = {
 };
 
 function updateCostByCoordinates() {
-	const id = document.querySelectorAll(config.list);
+	let ids = document.querySelectorAll(config.list);
 	let values = [];
-	id.forEach((item) => {
-		values[item.id] = item.value;
-	});
+	ids.forEach((id) => {
+		if (!parseInt(id.value)) { id.value = "0" }
+		if (parseInt(id.value) > parseInt(id.max)) { id.value = id.max; }
+		if (parseInt(id.value) < parseInt(id.min)) { id.value = id.min }
+		values[id.id] = parseInt(id.value)
+	})
 	return updateCost(values);
 }
 
 function updateCostBySize() {
-	const id = document.querySelectorAll(["#distance", "#length", "#width"]);
+	let ids = document.querySelectorAll(["#distance", "#length", "#width"]);
+	ids.forEach((id) => {
+		id.value = Math.floor(parseInt(id.value));
+		if (!parseInt(id.value)) { id.value = "0" }
+		if (parseInt(id.value) > parseInt(id.max)) { id.value = id.max; }
+		if (parseInt(id.value) < parseInt(id.min)) { id.value = id.min }
+	})
 	return updateCost({
-		"x1": id[0].value,
-		"x2": parseInt(id[0].value) + parseInt(id[1].value),
+		"x1": parseInt(ids[0].value),
+		"x2": parseInt(ids[0].value) + parseInt(ids[1].value),
 		"y1": 63,
 		"y2": 319,
 		"z1": 0,
-		"z2": id[2].value
+		"z2": parseInt(ids[2].value)
 	});
 }
 
 function updateCost(data) {
+	console.log(data)
 	const minX = Math.min(data["x1"], data["x2"]); document.getElementById("minX").innerHTML = minX;
 	const maxX = Math.max(data["x1"], data["x2"]); document.getElementById("maxX").innerHTML = maxX;
 	const minY = Math.min(data["y1"], data["y2"]); document.getElementById("minY").innerHTML = minY;
@@ -38,6 +48,7 @@ function updateCost(data) {
 	const sizeX = maxX - minX + 1; document.getElementById("sizeX").innerHTML = sizeX;
 	const sizeY = maxY - minY + 1; document.getElementById("sizeY").innerHTML = sizeY;
 	const sizeZ = maxZ - minZ + 1; document.getElementById("sizeZ").innerHTML = sizeZ;
+	console.log(minZ, maxZ, sizeZ)
 	
 	let heightRate = (maxY > config.surfaceLevel) ? 1 + (config.surfaceLevel - minY) * config.height : sizeY * config.height;
 	let useX = Math.min(Math.abs(minX), Math.abs(maxX)) > Math.min(Math.abs(minZ), Math.abs(maxZ));
@@ -47,16 +58,12 @@ function updateCost(data) {
 
 	let taxes = [];
 	for (let i = loopMin; i <= loopMax; i++) {
-		let centerRate = 1.0 - Math.log(Math.abs(i) / 1000) / Math.log(config.centerLogBase);
+		let centerRate = (i == 0) ? 1 : 1.0 - (Math.log(Math.abs(i) / 1000) / Math.log(config.centerLogBase));
+		console.log(i, centerRate)
 		let taxRate = config.rate;
 		let blockRate = heightRate * centerRate * taxRate;
-
 		taxes.push(blockRate * otherSize);
 	}
-
-	const cost = taxes.reduce((a, b) => a + b, 0) * 1000;
-	return document.querySelector("#output").innerHTML = (cost === Infinity) ? 0 : Math.ceil(cost) / 1000;
+	let cost = taxes.reduce((a, b) => a + b, 0) * 1000;
+	return document.querySelector("#output").innerHTML = Math.ceil(cost) / 1000;
 }
-
-updateCostByCoordinates();
-updateCostBySize();
