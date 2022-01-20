@@ -48,7 +48,6 @@ function updateCost(data) {
 	const sizeX = maxX - minX + 1; document.getElementById("sizeX").innerHTML = sizeX;
 	const sizeY = maxY - minY + 1; document.getElementById("sizeY").innerHTML = sizeY;
 	const sizeZ = maxZ - minZ + 1; document.getElementById("sizeZ").innerHTML = sizeZ;
-	console.log(minZ, maxZ, sizeZ)
 	
 	let heightRate = (maxY > config.surfaceLevel) ? 1 + (config.surfaceLevel - minY) * config.height : sizeY * config.height;
 	let useX = Math.min(Math.abs(minX), Math.abs(maxX)) > Math.min(Math.abs(minZ), Math.abs(maxZ));
