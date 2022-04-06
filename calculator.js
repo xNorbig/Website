@@ -2,7 +2,7 @@ const config = {
 	"height": 0.01,
 	"centerLogBase": 5,
 	"centerLogDivide": 1000,
-	"rate": 0.005,
+	"rate": 0.0033333,
 	"surfaceLevel": 63,
 	"list": ["#x1", "#x2", "#y1", "#y2", "#z1", "#z2"]
 };
