@@ -1,18 +1,21 @@
 const config = {
-	"height": 0.01,
-	"centerLogBase": 5,
-	"centerLogDivide": 1000,
-	"rate": 0.0033333,
-	"surfaceLevel": 63,
-	"list": ["#x1", "#x2", "#y1", "#y2", "#z1", "#z2"]
+	height: 0.01,
+	centerLogBase: 5,
+	centerLogDivide: 1000,
+	rate: 0.0033333,
+	surfaceLevel: 63
 };
 
-function updateCostByCoordinates() {
-	let ids = document.querySelectorAll(config.list);
+const byCoordinates = document.querySelectorAll('#by_coordinates input');
+const bySize = document.querySelectorAll('#by_size input')
+byCoordinates.forEach(element => element.addEventListener('change', updateCostByCoordinates))
+bySize.forEach(element => element.addEventListener('change', updateCostBySize))
+
+function updateCostByCoordinates(e) {
 	let values = [];
-	ids.forEach((id) => {
+	byCoordinates.forEach((id) => {
 		id.value = Math.floor(parseInt(id.value));
-		if (!parseInt(id.value)) { id.value = "0" }
+		if (!parseInt(id.value)) { id.value = '0' }
 		if (parseInt(id.value) > parseInt(id.max)) { id.value = id.max; }
 		if (parseInt(id.value) < parseInt(id.min)) { id.value = id.min }
 		values[id.id] = parseInt(id.value)
@@ -21,41 +24,44 @@ function updateCostByCoordinates() {
 }
 
 function updateCostBySize() {
-	let ids = document.querySelectorAll(["#distance", "#length", "#width"]);
-	ids.forEach((id) => {
+	bySize.forEach((id) => {
 		id.value = Math.floor(parseInt(id.value));
-		if (!parseInt(id.value)) { id.value = "0" }
+		if (!parseInt(id.value)) { id.value = '0' }
 		if (parseInt(id.value) > parseInt(id.max)) { id.value = id.max; }
 		if (parseInt(id.value) < parseInt(id.min)) { id.value = id.min }
 	})
 	return updateCost({
-		"x1": parseInt(ids[0].value),
-		"x2": parseInt(ids[0].value) + parseInt(ids[1].value),
-		"y1": 63,
-		"y2": 319,
-		"z1": 0,
-		"z2": parseInt(ids[2].value)
+		x1: parseInt(ids[0].value),
+		x2: parseInt(ids[0].value) + parseInt(ids[1].value),
+		y1: 63,
+		y2: 319,
+		z1: 0,
+		z2: parseInt(ids[2].value)
 	});
 }
 
 function updateCost(data) {
-	const minX = Math.min(data["x1"], data["x2"]); document.getElementById("minX").innerHTML = minX;
-	const maxX = Math.max(data["x1"], data["x2"]); document.getElementById("maxX").innerHTML = maxX;
-	const minY = Math.min(data["y1"], data["y2"]); document.getElementById("minY").innerHTML = minY;
-	const maxY = Math.max(data["y1"], data["y2"]); document.getElementById("maxY").innerHTML = maxY;
-	const minZ = Math.min(data["z1"], data["z2"]); document.getElementById("minZ").innerHTML = minZ;
-	const maxZ = Math.max(data["z1"], data["z2"]); document.getElementById("maxZ").innerHTML = maxZ;
-	const sizeX = maxX - minX + 1; document.getElementById("sizeX").innerHTML = sizeX;
-	const sizeY = maxY - minY + 1; document.getElementById("sizeY").innerHTML = sizeY;
-	const sizeZ = maxZ - minZ + 1; document.getElementById("sizeZ").innerHTML = sizeZ;
+	console.log(data)
+	const coordinates = ['x', 'y', 'z']
+	let min = max = size = [];
+	coordinates.forEach((coordinate) => {
+		console.log(`${coordinate}_1`, data[`${coordinate}_1`])
+		console.log(`${coordinate}_2`, data[`${coordinate}_2`])
+		min[coordinate] = Math.min(data[`${coordinate}_1`], data[`${coordinate}_2`]);
+		min[coordinate] = Math.max(data[`${coordinate}_1`], data[`${coordinate}_2`]);
+		size[coordinate] = max[coordinate] - min[coordinate] + 1;
+		document.getElementById(`min_${coordinate}`).innerText = min[coordinate];
+		document.getElementById(`max_${coordinate}`).innerText = max[coordinate];
+		document.getElementById(`size_${coordinate}`).innerText = size[coordinate];
+	})
 
-	document.getElementById("alert").className = (sizeX < 5 || sizeY < 5 || sizeZ < 5) ? "alert alert-danger" : "d-none"
+	document.getElementById('alert').className = (size['x'] < 5 || size['y'] < 5 || size['z'] < 5) ? 'alert alert-danger' : 'd-none'
 
-	let heightRate = (maxY > config.surfaceLevel) ? 1 + (config.surfaceLevel - minY) * config.height : sizeY * config.height;
-	let useX = Math.min(Math.abs(minX), Math.abs(maxX)) > Math.min(Math.abs(minZ), Math.abs(maxZ));
-	let otherSize = (useX) ? sizeZ : sizeX;
-	let loopMin = (useX) ? minX : minZ;
-	let loopMax = (useX) ? maxX : maxZ;
+	let heightRate = (max['y'] > config.surfaceLevel) ? 1 + (config.surfaceLevel - min['y']) * config.height : size['y'] * config.height;
+	let useX = Math.min(Math.abs(min['x']), Math.abs(max['x'])) > Math.min(Math.abs(min['z']), Math.abs(max['z']));
+	let otherSize = (useX) ? size['z'] : size['x'];
+	let loopMin = (useX) ? min['x'] : min['z'];
+	let loopMax = (useX) ? max['x'] : max['z'];
 
 	let taxes = [];
 	for (let i = loopMin; i <= loopMax; i++) {
@@ -65,5 +71,5 @@ function updateCost(data) {
 		taxes.push(blockRate * otherSize);
 	}
 	let cost = taxes.reduce((a, b) => a + b, 0) * 1000;
-	return document.querySelector("#output").innerHTML = Math.ceil(cost) / 1000;
+	return document.querySelector('#output').innerText = Math.ceil(cost) / 1000;
 }
