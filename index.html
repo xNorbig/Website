@@ -4,45 +4,108 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-+xdjtZ+fV2QpS1r5+lJQg1rmCCgv5vLyITpZUqrPH78=" crossorigin="anonymous">
+	<link href="style.css" rel="stylesheet">
 	<title>Kalkulator podatku</title>
 </head>
-<body>
-	<div class="container pt-5">
-		<h1 class="text-center">Oblicz koszt terenu</h1>
-		<h6 class="text-muted text-center">Strona stworzona przez <a href="https://github.com/xNorbig" class="link-primary"><img src="https://minotar.net/avatar/Kruliczek" style="width:auto;height:1.2rem;" class="me-1">Norbi / Kruliczek</a></h6>
-		<div class="row pt-5">
-			<div class="col" id="by_coordinates">
+<body class="text-bg-dark">
+	<div class="container pt-md-5 text-center">
+		<header>
+			<h1 class="display-3">Oblicz koszt terenu</h1>
+			<h6>
+				<img src="https://minotar.net/avatar/Kruliczek" class="me-1 rounded-3" alt="awatar Norbi">
+				<a href="https://github.com/xNorbig" class="link-info">
+					Norbi / Kruliczek
+				</a> - autor
+
+				<div class="mb-2"></div>
+
+				<img src="utopiamc.jpg" class="me-1 rounded-3" alt="ikona utopiamc.pl">
+				Dołącz do społeczności
+				<a href="https://utopiamc.pl" class="link-info">
+					UtopiaMC.pl
+				</a>
+			</h6>
+		</header>
+		<hr class="opacity-50 text-secondary">
+		<div class="row pt-md-5 pt-3">
+			<div class="col-12 col-md-5" id="by_coordinates">
 				<h1 class="pb-5 text-center">Podając koordynaty</h1>
-				<ul class="list-unstyled">
-					<li class="pt-2">X: od <input type="number" value="0" step="1" id="x_1" min="-4000" max="4000"> do <input type="number" value="0" step="1" id="x_2" min="-4000" max="4000"></li>
-					<li class="pt-2">Y: od <input type="number" value="63" step="1" id="y_1" min="-64" max="320"> do <input type="number" value="320" step="1" id="y_2" min="-64" max="320"></li>
-					<li class="pt-2">Z: od <input type="number" value="-0" step="1" id="z_1" min="-4000" max="4000"> do <input type="number" value="0" step="1" id="z_2" min="-4000" max="4000"></li>
-				</ul>
+				<div class="input-group mb-3">
+					<span class="input-group-text rounded text-bg-dark border-secondary">X</span>
+					<span class="input-group-text rounded-start text-bg-dark border-secondary ms-2">od</span>
+					<input type="number" class="form-control rounded-end text-bg-dark border-secondary" value="0" step="1" id="x_1" min="-4000" max="4000">
+					<span class="input-group-text rounded-start text-bg-dark border-secondary ms-1">do</span>
+					<input type="number" class="form-control rounded-end text-bg-dark border-secondary" value="0" step="1" id="x_2" min="-4000" max="4000">
+				</div>
+				<div class="input-group mb-3">
+					<span class="input-group-text rounded text-bg-dark border-secondary">Y</span>
+					<span class="input-group-text rounded-start text-bg-dark border-secondary ms-2">od</span>
+					<input type="number" class="form-control rounded-end text-bg-dark border-secondary" value="63" step="1" id="y_1" min="-64" max="320">
+					<span class="input-group-text rounded-start text-bg-dark border-secondary ms-1">do</span>
+					<input type="number" class="form-control rounded-end text-bg-dark border-secondary" value="320" step="1" id="y_2" min="-64" max="320">
+				</div>
+				<div class="input-group mb-3">
+					<span class="input-group-text rounded text-bg-dark border-secondary">Z</span>
+					<span class="input-group-text rounded-start text-bg-dark border-secondary ms-2">od</span>
+					<input type="number" class="form-control rounded-end text-bg-dark border-secondary" value="0" step="1" id="z_1" min="-4000" max="4000">
+					<span class="input-group-text rounded-start text-bg-dark border-secondary ms-1">do</span>
+					<input type="number" class="form-control rounded-end text-bg-dark border-secondary" value="0" step="1" id="z_2" min="-4000" max="4000">
+				</div>
 			</div>
-			<div class="col">
+			<div class="col-12 col-md-2 justify-content-center text-center fs-3 my-auto">
+				lub
+			</div>
+			<div class="col-12 col-md-5" id="by_size">
 				<h1 class="pb-5 text-center">Podając wymiary</h1>
-				<ul class="list-unstyled">
-					<li class="pt-2">Odległość najbliższej kratki od centrum: <input type="number" value="0" step="1" id="distance" min="1" max="4000"></li>
-					<li class="pt-2">Długość: <input type="number" value="0" step="1" id="length" min="1" max="4000"></li>
-					<li class="pt-2">Szerokość: <input type="number" value="0" step="1" id="width" min="1" max="4000"></li>
-				</ul>
+				<small class="d-block d-lg-none">*Odległość najbliższej kratki od centrum</small>
+				<div class="input-group mb-3">
+					<span class="input-group-text text-bg-dark border-secondary">
+						<span class="d-block d-lg-none">Odległość*</span>
+						<span class="d-none d-lg-block">Odległość najbliższej kratki od centrum</span>
+					</span>
+					<input type="number" class="form-control text-bg-dark border-secondary" value="1" step="1" id="distance" min="1" max="4000">
+				</div>
+				<div class="input-group mb-3">
+					<span class="input-group-text rounded-start text-bg-dark border-secondary">Długość</span>
+					<input type="number" class="form-control rounded-end text-bg-dark border-secondary" value="1" step="1" id="length" min="1" max="4000">
+				</div>
+				<div class="input-group mb-3">
+					<span class="input-group-text rounded-start text-bg-dark border-secondary">Szerokość</span>
+					<input type="number" class="form-control rounded-end text-bg-dark border-secondary" value="1" step="1" id="width" min="1" max="4000">
+				</div>
 			</div>
 		</div>
-		<div class="row p-5">
-			<div class="col" id="by_size">
-				<div class="card">
+		<div class="row p-md-5 d-none" id="output">
+			<div class="col">
+				<div class="card text-bg-dark border">
 					<div class="card-body">
 						<h1 class="card-title text-center">
-							Informacje o terenie
+							Szacowana cena za teren
 						</h1>
-						<p class="card-text text-center">
-							<ul class="list-unstyled fs-3 ms-5">
-								<li>Obliczony koszt: <span id="output">0</span> D</li>
-								<li>X: <span id="min_x">-</span> do <span id="max_x">-</span> (<span id="size_x">-</span> bloków)</li>
-								<li>Y: <span id="min_y">-</span> do <span id="max_y">-</span> (<span id="size_y">-</span> bloków)</li>
-								<li>Z: <span id="min_z">-</span> do <span id="max_z">-</span> (<span id="size_z">-</span> bloków)</li>
-							</ul>
-							<div class="alert alert-danger" role="alert" id="alert">
+						<div class="card-text row">
+							<div class="col-12 table-responsive-sm">
+								<table class="table table-dark table-borderless">
+									<tbody>
+										<tr>
+											<td class="text-end">Cena:</td>
+											<td class="text-start" id="output_cost">-</td>
+										</tr>
+										<tr>
+											<td class="text-end">X:</td>
+											<td class="text-start" id="output_x">-</td>
+										</tr>
+										<tr>
+											<td class="text-end">Y:</td>
+											<td class="text-start" id="output_y">-</td>
+										</tr>
+										<tr>
+											<td class="text-end">Z:</td>
+											<td class="text-start" id="output_z">-</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="alert alert-danger mx-auto col-12 col-md-6" id="alert" role="alert">
 								Możliwe minimalne wymiary terenu to 5x5x5
 							</div>
 						</p>
