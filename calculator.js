@@ -2,7 +2,7 @@ const config = {
 	height: 0.01,
 	centerLogBase: 5,
 	centerLogDivide: 1000,
-	rate: 0.0033333,
+	rate: 0.0022222,
 	surfaceLevel: 63,
 	coordinatePattern: '<span class="fw-bold">{min}</span> do <span class="fw-bold">{max}</span> (<span class="fw-bold">{size}</span> bloków)',
 	costPattern: '<span class="fw-bold">{cost}</span> D'
